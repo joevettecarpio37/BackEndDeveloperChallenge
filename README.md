@@ -26,16 +26,16 @@
 ## Step 8
 - [x] Then rename the .env.example to .env
 - [x] Edit the details of the following :
-APP_URL=http://localhost:8000
-DB_DATABASE = twitter
-DB_USERNAME = //yourdatabaseusername
-DB_PASSWORD = //yourdatabasepassword
-MAIL_DRIVER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=//youremailaddress
-MAIL_PASSWORD=//yourpassword
-MAIL_ENCRYPTION=tls
+- [ ] APP_URL=http://localhost:8000
+- [ ] DB_DATABASE = twitter
+- [ ] DB_USERNAME = //yourdatabaseusername
+- [ ] DB_PASSWORD = //yourdatabasepassword
+- [ ] MAIL_DRIVER=smtp
+- [ ] MAIL_HOST=smtp.gmail.com
+- [ ] MAIL_PORT=587
+- [ ] MAIL_USERNAME=//youremailaddress
+- [ ] MAIL_PASSWORD=//yourpassword
+- [ ] MAIL_ENCRYPTION=tls
 ## Step 9
 - [x] Then type this command: php artisan serve
 - [x] You must see this output: Laravel development server started: <http://127.0.0.1:8000>
