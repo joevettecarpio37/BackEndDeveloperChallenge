@@ -18,11 +18,35 @@ class TwitterController extends Controller
     {
         $this->middleware('auth');
     }
+    
+
+    public function postProfile($image)
+    {
+
+        return  Twitter::postProfileImage([ 'image' => $image , 'format' => 'json']);
+
+    }
+    
 
     public function search($q)
     {
         return Twitter::getSearch(['q' => $q, 'format' => 'json']);
     }
+
+    public function create()
+    {
+        return Twitter::getSearch(['q' => $q, 'format' => 'json']);
+    }
+
+    public function post($message)
+    {
+        $status = 'My status';
+        $status = substr($message, 0, 119);
+        return  Twitter::postTweet(['status' => $status, 'format' => 'json']);
+
+    }
+
+  
 
     public function rand_word()
     {

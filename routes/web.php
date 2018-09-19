@@ -21,7 +21,7 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/userTimeline', function()
 {
-	return Twitter::getUserTimeline(['screen_name' => 'thujohn', 'count' => 20, 'format' => 'json']);
+	return Twitter::getUserTimeline(['screen_name' => 'vetti49588016', 'count' => 20, 'format' => 'json']);
 });
 
 Route::get('/searchTweets/{q}', 'TwitterController@search')->name('search');
@@ -31,5 +31,14 @@ Route::get('/randTweets', 'TwitterController@rand_word')->name('rand_word');
 Route::post('/addActivity', 'ActivityLogController@add');
 
 Route::get('/test', function() {
-	return Response::json(App\ActivityLog::all()->where('user_id', '=', '1'));
+	return Response::json(App\ActivityLog::all()->where('user_id', '=', '1')->orderBy('created_at', 'asc'));
 });
+
+Route::post('/postTweets/{message}', 'TwitterController@post')->name('post');
+
+Route::post('/changeImage/{image}', 'TwitterController@postProfile')->name('postProfile');
+
+
+
+
+

@@ -78,7 +78,182 @@
         </main>
     </div>
     <script>
-        function activity(b,isRandom){
+    $( document ).ready(function() {
+        $("#imgInp").change(function () {
+        readURL(this);
+    });
+        timeline();
+});
+function readURL(input) {
+    var imageURL = "";
+    if (input.files && input.files[0]) {
+        var form = document.getElementById("myAwesomeForm");
+
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('.profile-user-img').attr('src', e.target.result);
+            ImageURL = e.target.result;
+var block = ImageURL.split(";");
+var contentType = block[0].split(":")[1];
+var realData = block[1].split(",")[1];
+
+var blob = b64toBlob(realData, contentType);
+
+var formDataToUpload = new FormData(form);
+formDataToUpload.append("image", blob);
+alert(formDataToUpload);
+      $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+            $.ajax({
+                url: "/changeImage/"+blob,
+                type: "POST",
+                dataType: "json",
+               
+                success: function (result) {
+                    console.log(result);
+                },
+    
+                error: function (errormessage) {
+                    console.log(errormessage.responseText);
+                }
+            });
+            activity('','You change your profile picture');
+            // timeline();
+
+
+        }
+
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+    function b64toBlob(b64Data, contentType, sliceSize) {
+                contentType = contentType || '';
+                sliceSize = sliceSize || 512;
+
+                var byteCharacters = atob(b64Data);
+                var byteArrays = [];
+
+                for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+                    var byteNumbers = new Array(slice.length);
+                    for (var i = 0; i < slice.length; i++) {
+                        byteNumbers[i] = slice.charCodeAt(i);
+                    }
+
+                    var byteArray = new Uint8Array(byteNumbers);
+
+                    byteArrays.push(byteArray);
+                }
+
+              var blob = new Blob(byteArrays, {type: contentType});
+              return blob;
+            }
+    function timeline() {
+            $(".post-list").html("");
+            $.ajax({
+                url: "/userTimeline",
+                type: "GET",
+                dataType: "json",
+                success: function (result) {
+                    console.log(result)
+                    var flag = "";
+                    var vhtml = "";
+                    var slist = "";
+                    result.forEach(function (tweet) {
+                        $(".profile-user-img").attr("src", tweet.user.profile_image_url);
+
+
+                        flag = tweet.text;
+                        // console.log(tweet.text)
+                        vhtml += "<div class='social-feed-box'>";
+                        vhtml += "<div class='pull-right social-action dropdown'>";
+                       
+                        vhtml += "</div>";
+                        vhtml += "<div class='social-avatar'>";
+                        vhtml += "<a href='' class='pull-left'>";
+                        vhtml += "<img alt='image' src='" + tweet.user.profile_image_url + "'>";
+                        vhtml += "</a>";
+                        vhtml += "<div class='media-body'>";
+                        vhtml += "<a href='#'>";
+                        vhtml += tweet.user.screen_name;
+                        vhtml += "</a>";
+                        vhtml += "<small class='text-muted'>" + tweet.created_at + "</small>";
+                        vhtml += "</div>";
+                        vhtml += "</div>";
+                        vhtml += "<div class='social-body'>";
+                        vhtml += "<p>" + tweet.text + "</p>";
+                        vhtml += "<div id=img_" + tweet.id + "></div>"
+                        vhtml += "<div class='btn-group'>";
+                        vhtml += "</div>";
+                        vhtml += "</div>";
+                        vhtml += "<div class='social-footer'>";
+                        vhtml += "<div class='comment-list-" + tweet.id + "'></div>";
+                        vhtml += "<div class='social-comment'>";
+                       
+                        vhtml += "<div class='media-body' id='div_" + tweet.id + "'>";
+                        vhtml += "</div>";
+                        vhtml += "</div>";
+                        vhtml += "</div>";
+                        vhtml += "</div>";
+                        slist += tweet.id + ",";
+                    });
+                    if(flag == "")
+                    {
+                        $(".post-list").append("Words you search does not exist");                
+
+                    }
+                    else{
+                        $(".post-list").append(vhtml);                
+
+                    }
+
+                },
+                error: function (errormessage) {
+                    console.log(errormessage.responseText);
+                }
+            });
+        }
+
+
+
+
+
+function postTweets(a){
+            $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+            $.ajax({
+                url: "/postTweets/"+a,
+                type: "POST",
+                dataType: "json",
+               
+                success: function (result) {
+                    console.log(result);
+                },
+    
+                error: function (errormessage) {
+                    console.log(errormessage.responseText);
+                }
+            });
+            activity(a,'You post a tweet');
+            timeline();
+
+        }
+
+
+
+        function activity(b,activity){
             $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -90,7 +265,7 @@
                 type: "POST",
                 dataType: "json",
                 data: {
-                activity: isRandom ? ("You random search " + b) : ("You search for "+b),
+                activity: activity + ' '+ b,
                 },
                 success: function (result) {
                     console.log(result);
@@ -128,7 +303,7 @@
                         vhtml += "<a href='#'>";
                         vhtml += tweet.user.screen_name;
                         vhtml += "</a>";
-                        vhtml += "<small class='text-muted'>" + tweet.id_str + " - " + tweet.created_at + "</small>";
+                        vhtml += "<small class='text-muted'>" + tweet.created_at + "</small>";
                         vhtml += "</div>";
                         vhtml += "</div>";
                         vhtml += "<div class='social-body'>";
@@ -178,7 +353,7 @@ $.ajax({
      dataType: "json",
      success: function (result) {
 // console.log(result);
-       load_news_feeds(result,true)
+       load_news_feeds(result,'You random searched')
      },
 
     // },

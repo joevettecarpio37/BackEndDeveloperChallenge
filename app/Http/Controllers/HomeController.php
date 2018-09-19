@@ -24,7 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $activity_logs = ActivityLog::all()->where('user_id', '=', \Auth::user()->id);
+        $activity_logs = ActivityLog::all()->where('user_id', '=', \Auth::user()->id)->sortByDesc('created_at');
+        
+ 
         return view('home', ['activity_logs' => $activity_logs]);
     }
 }
